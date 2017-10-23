@@ -10,37 +10,43 @@ function loadData(store, objArr){
   for(const el of objArr){
     let key = Object.keys(el)[0]
     let values = el[Object.keys(el)[0]]
-    store[key] = values
+    store.setData(store, key, values)
+    // setData() updates the 'data' variable, not the actual store
+    // store[key] = values
   }
+  showStore(store)
 }
 
 function showStore(store){
   let keys = Object.keys(store)
   let storeHTML = '<div class="storeData">'
   for(let i = 0; i<keys.length; i++){
-    let key = keys[i]
-    let values = store[key]
-    let html = `<h4>${key}</h4><p>${values}</p>`
-    storeHTML += html 
+    if(typeof store[keys[i]] === 'object'){
+      let key = keys[i]
+      let values = store[key]
+      let html = `<h4>${key}</h4><p>${values}</p>`
+      storeHTML += html 
+    }
   }
   storeHTML += '</div>'
-  document.getElementById('main').innerHTML = storeHTML
+  $('#main')[0].innerHTML = storeHTML
 }
 
 function createStore() {
   const listeners = [];
   const data = {};
- 
+  
   function emitChange() {
     listeners.forEach(listener => listener());
   }
- 
+  
   function subscribe(callback) {
     listeners.push(callback);
   }
- 
-  function setData(key, value) {
-    data[key] = value;
+  
+  function setData(store, key, value) {
+    // data[key] = value;
+    store[key] = value
     emitChange();
   }
  
@@ -55,5 +61,13 @@ function createStore() {
   };
 }
 
+
 loadData(asdf, data)
 showStore(asdf)
+
+// asdf.subscribe(function () {
+//   const storeData = asdf.getData();
+//   console.log('Updated store data:', storeData);
+// });
+
+// asdf.setData('flavor', 'chocolate');
