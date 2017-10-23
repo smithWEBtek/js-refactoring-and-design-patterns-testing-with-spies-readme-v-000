@@ -46,6 +46,7 @@ function createStore() {
   
   function setData(store, key, value) {
     // data[key] = value;
+    let zxcv = sinon.spy()
     store[key] = value
     emitChange();
   }
